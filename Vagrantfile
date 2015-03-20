@@ -2,10 +2,17 @@
 # # vi: set ft=ruby :
 
 require 'fileutils'
+require 'erb'
+require 'dotenv'
 
 Vagrant.require_version ">= 1.6.0"
 
 CLOUD_CONFIG_PATH = File.join(File.dirname(__FILE__), "user-data")
+
+# Create user-data from erb template
+Dotenv.load
+erb = File.open(File.join(File.dirname(__FILE__), "user-data.yml.erb")) { |f| ERB.new(f.read) }
+File.write(CLOUD_CONFIG_PATH, erb.result(binding))
 
 # Defaults for config options defined in CONFIG
 $num_instances = 2
