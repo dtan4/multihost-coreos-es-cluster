@@ -30,3 +30,23 @@ coreos:
 
         [Install]
         WantedBy=sockets.target
+    - name: elasticsearch.service
+      command: start
+      enable: true
+      content: |
+        [Unit]
+        Description=Elasticsearch with head plugin
+        After=docker.service
+        Requires=docker.service
+
+        [Service]
+        TimeoutStartSec=0
+        User=core
+        ExecStartPre=-/usr/bin/docker kill elasticsearch
+        ExecStartPre=-/usr/bin/docker rm elasticsearch
+        ExecStartPre=/usr/bin/docker pull quay.io/dtan4/elasticsearch-head-plugin:latest
+        ExecStart=/usr/bin/docker run --name elasticsearch -p 9200:9200 quay.io/dtan4/elasticsearch-head-plugin
+        ExecStop=/usr/bin/docker stop elasticsearch
+
+        [Install]
+        WantedBy=multi-user.target
