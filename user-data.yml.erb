@@ -59,7 +59,7 @@ coreos:
         ExecStartPre=-/usr/bin/docker kill elasticsearch
         ExecStartPre=-/usr/bin/docker rm elasticsearch
         ExecStartPre=/usr/bin/docker pull quay.io/dtan4/elasticsearch-head-plugin:latest
-        ExecStart=/usr/bin/docker run --name elasticsearch -p 9200:9200 quay.io/dtan4/elasticsearch-head-plugin
+        ExecStart=/usr/bin/docker run --name elasticsearch -p 9200:9200 quay.io/dtan4/elasticsearch-head-plugin elasticsearch -Des.cluster.name=mycluster
         ExecStop=/usr/bin/docker stop elasticsearch
 
         [Install]
