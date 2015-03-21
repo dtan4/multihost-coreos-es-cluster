@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ $# -eq 1 ]; then
+  if [ $1 = "--flannel" ]; then
+    export FLANNEL=1
+  fi
+fi
+
+ETCD_DISCOVERY=$(curl https://discovery.etcd.io/new) vagrant up
