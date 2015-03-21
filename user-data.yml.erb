@@ -36,6 +36,8 @@ coreos:
       content: |
         [Unit]
         Description=Docker Socket for the API
+        After=flanneld.service
+        Requires=flanneld.service
 
         [Socket]
         ListenStream=2375
