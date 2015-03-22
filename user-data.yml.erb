@@ -36,8 +36,10 @@ coreos:
       content: |
         [Unit]
         Description=Docker Socket for the API
+        <% if ENV["FLANNEL"] %>
         After=flanneld.service
         Requires=flanneld.service
+        <% end %>
 
         [Socket]
         ListenStream=2375
@@ -61,7 +63,11 @@ coreos:
         ExecStartPre=-/usr/bin/docker kill elasticsearch
         ExecStartPre=-/usr/bin/docker rm elasticsearch
         ExecStartPre=/usr/bin/docker pull quay.io/dtan4/elasticsearch-head-plugin:latest
+        <% if ENV["FLANNEL"] %>
         ExecStart=/usr/bin/docker run --name elasticsearch -p 9200:9200 quay.io/dtan4/elasticsearch-head-plugin elasticsearch -Des.cluster.name=mycluster
+        <% else %>
+        ExecStart=/usr/bin/docker run --name elasticsearch -p 9200:9200 --net=host quay.io/dtan4/elasticsearch-head-plugin elasticsearch -Des.cluster.name=mycluster -Des.network.publish_host=_eth1:ipv4_
+        <% end %>
         ExecStop=/usr/bin/docker stop elasticsearch
 
         [Install]
